@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Tracker - PGDM Tri III</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #FF6B35;
+            --primary-dark: #E85A2A;
+            --secondary: #004E89;
+            --accent: #FFD23F;
+            --success: #06D6A0;
+            --danger: #EF476F;
+            --bg-main: #FAFAFA;
+            --bg-card: #FFFFFF;
+            --text-primary: #1A1A1A;
+            --text-secondary: #666666;
+            --border: #E0E0E0;
+            --shadow: rgba(0, 0, 0, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'IBM Plex Sans', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem 1rem;
+            color: var(--text-primary);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Login Screen Styles */
+        .login-container {
+            max-width: 450px;
+            margin: 5rem auto;
+        }
+
+        .login-card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .login-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .login-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 2rem;
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .login-subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            animation: slideDown 0.6s ease-out;
+        }
+
+        .header-left {
+            flex: 1;
+        }
+
+        h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 2.5rem;
+            color: white;
+            text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.2);
+            margin-bottom: 0.5rem;
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .user-info {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            color: white;
+            text-align: right;
+        }
+
+        .user-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .logout-btn {
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: white;
+            color: var(--primary);
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px var(--shadow);
+            animation: fadeInUp 0.6s ease-out;
+            animation-fill-mode: both;
+        }
+
+        .card:nth-child(1) { animation-delay: 0.1s; }
+        .card:nth-child(2) { animation-delay: 0.2s; }
+        .card:nth-child(3) { animation-delay: 0.3s; }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid var(--primary);
+        }
+
+        h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--secondary);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="number"],
+        input[type="email"],
+        select {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: 'IBM Plex Sans', sans-serif;
+            transition: all 0.3s ease;
+            background: var(--bg-main);
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 0.875rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(255, 107, 53, 0.4);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #05C493;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #E8395F;
+            transform: translateY(-2px);
+        }
+
+        .btn-small {
+            width: auto;
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            margin-top: 1rem;
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .subjects-list {
+            margin-top: 1.5rem;
+        }
+
+        .subject-item {
+            background: var(--bg-main);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-left: 5px solid var(--primary);
+            transition: all 0.3s ease;
+        }
+
+        .subject-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .subject-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .subject-name {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--secondary);
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .attendance-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat-box {
+            text-align: center;
+            padding: 0.75rem;
+            background: white;
+            border-radius: 8px;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .percentage {
+            color: var(--success);
+        }
+
+        .percentage.low {
+            color: var(--danger);
+        }
+
+        .percentage.warning {
+            color: #D4A017;
+        }
+
+        .progress-bar {
+            height: 12px;
+            background: var(--border);
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--success), var(--primary));
+            transition: width 0.6s ease;
+            border-radius: 6px;
+        }
+
+        .progress-fill.low {
+            background: linear-gradient(90deg, var(--danger), var(--primary));
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            font-weight: 500;
+        }
+
+        .alert-warning {
+            background: rgba(255, 210, 63, 0.2);
+            border-left: 4px solid var(--accent);
+            color: #8B6914;
+        }
+
+        .alert-danger {
+            background: rgba(239, 71, 111, 0.2);
+            border-left: 4px solid var(--danger);
+            color: #9B1C3A;
+        }
+
+        .alert-success {
+            background: rgba(6, 214, 160, 0.2);
+            border-left: 4px solid var(--success);
+            color: #046E56;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .text-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .text-link:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+
+        .text-center {
+            text-align: center;
+            margin-top: 1rem;
+            color: var(--text-secondary);
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .attendance-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .user-info {
+                text-align: center;
+            }
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen">
+        <div class="login-container">
+            <div class="login-card">
+                <div class="login-header">
+                    <div class="login-icon">🎓</div>
+                    <h2 class="login-title">Student Login</h2>
+                    <p class="login-subtitle">PGDM Tri III • A.Y. 2025-26</p>
+                </div>
+                
+                <div class="form-group">
+                    <label for="loginName">Student Name</label>
+                    <input type="text" id="loginName" placeholder="Enter your full name">
+                </div>
+                
+                <div class="form-group">
+                    <label for="loginRollNo">Roll Number</label>
+                    <input type="text" id="loginRollNo" placeholder="e.g., 25FM001">
+                </div>
+                
+                <div class="form-group">
+                    <label for="loginEmail">Email (Optional)</label>
+                    <input type="email" id="loginEmail" placeholder="your.email@example.com">
+                </div>
+                
+                <button class="btn btn-primary" id="loginBtn">Login / Register</button>
+                
+                <div class="text-center">
+                    <small>Your data is stored locally in your browser</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App Screen -->
+    <div id="appScreen" class="hidden">
+        <div class="container">
+            <header>
+                <div class="header-left">
+                    <h1>📚 Attendance Tracker</h1>
+                    <p class="subtitle">PGDM Tri III • Academic Year 2025-26</p>
+                </div>
+                <div class="user-info">
+                    <div class="user-name" id="displayName">Student Name</div>
+                    <div id="displayRollNo" style="font-size: 0.9rem; opacity: 0.9;">Roll No</div>
+                    <button class="logout-btn" id="logoutBtn">Logout</button>
+                </div>
+            </header>
+
+            <div class="main-grid">
+                <!-- Add Subject Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Add Subject</h2>
+                    </div>
+                    <div class="form-group">
+                        <label for="subjectName">Subject Name</label>
+                        <input type="text" id="subjectName" placeholder="e.g., Corporate Finance">
+                    </div>
+                    <div class="form-group">
+                        <label for="totalLectures">Total Lectures (Optional)</label>
+                        <input type="number" id="totalLectures" placeholder="Leave blank if unknown" min="0">
+                    </div>
+                    <button class="btn btn-primary" id="addSubjectBtn">Add Subject</button>
+                </div>
+
+                <!-- Mark Attendance Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Mark Attendance</h2>
+                    </div>
+                    <div class="form-group">
+                        <label for="selectSubject">Select Subject</label>
+                        <select id="selectSubject">
+                            <option value="">-- Choose a subject --</option>
+                        </select>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn btn-success" id="markPresentBtn">✓ Present</button>
+                        <button class="btn btn-danger" id="markAbsentBtn">✗ Absent</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Subjects List -->
+            <div class="card full-width">
+                <div class="card-header">
+                    <h2>Your Subjects</h2>
+                </div>
+                <div id="subjectsList" class="subjects-list">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📋</div>
+                        <p>No subjects added yet. Add your first subject to start tracking attendance!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Current logged in user
+        let currentUser = null;
+        let subjects = [];
+
+        // Get all users from localStorage
+        function getAllUsers() {
+            return JSON.parse(localStorage.getItem('attendanceUsers')) || {};
+        }
+
+        // Save all users to localStorage
+        function saveAllUsers(users) {
+            localStorage.setItem('attendanceUsers', JSON.stringify(users));
+        }
+
+        // Get current user's data key
+        function getUserDataKey() {
+            return 'attendance_' + currentUser.rollNo;
+        }
+
+        // Login/Register function
+        function handleLogin() {
+            const name = document.getElementById('loginName').value.trim();
+            const rollNo = document.getElementById('loginRollNo').value.trim().toLowerCase();
+            const email = document.getElementById('loginEmail').value.trim();
+
+            if (!name || !rollNo) {
+                alert('Please enter both name and roll number');
+                return;
+            }
+
+            const users = getAllUsers();
+            
+            // Check if user exists or create new
+            if (!users[rollNo]) {
+                users[rollNo] = {
+                    name: name,
+                    rollNo: rollNo,
+                    email: email,
+                    createdAt: new Date().toISOString()
+                };
+                saveAllUsers(users);
+            }
+
+            currentUser = users[rollNo];
+            
+            // Load user's subjects
+            loadUserSubjects();
+            
+            // Show app screen
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('appScreen').classList.remove('hidden');
+            
+            // Update user info display
+            document.getElementById('displayName').textContent = currentUser.name;
+            document.getElementById('displayRollNo').textContent = currentUser.rollNo.toUpperCase();
+            
+            renderSubjects();
+            updateSubjectDropdown();
+        }
+
+        // Logout function
+        function handleLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                currentUser = null;
+                subjects = [];
+                
+                // Clear login form
+                document.getElementById('loginName').value = '';
+                document.getElementById('loginRollNo').value = '';
+                document.getElementById('loginEmail').value = '';
+                
+                // Show login screen
+                document.getElementById('loginScreen').classList.remove('hidden');
+                document.getElementById('appScreen').classList.add('hidden');
+            }
+        }
+
+        // Load subjects for current user
+        function loadUserSubjects() {
+            const userDataKey = getUserDataKey();
+            subjects = JSON.parse(localStorage.getItem(userDataKey)) || [];
+        }
+
+        // Save subjects for current user
+        function saveSubjects() {
+            const userDataKey = getUserDataKey();
+            localStorage.setItem(userDataKey, JSON.stringify(subjects));
+            renderSubjects();
+            updateSubjectDropdown();
+        }
+
+        function addSubject() {
+            const name = document.getElementById('subjectName').value.trim();
+            const totalLectures = document.getElementById('totalLectures').value;
+
+            if (!name) {
+                alert('Please enter a subject name');
+                return;
+            }
+
+            const subject = {
+                id: Date.now(),
+                name: name,
+                totalLectures: totalLectures ? parseInt(totalLectures) : null,
+                attended: 0,
+                missed: 0
+            };
+
+            subjects.push(subject);
+            saveSubjects();
+
+            // Clear form
+            document.getElementById('subjectName').value = '';
+            document.getElementById('totalLectures').value = '';
+        }
+
+        function markAttendance(isPresent) {
+            const subjectId = parseInt(document.getElementById('selectSubject').value);
+            
+            if (!subjectId) {
+                alert('Please select a subject');
+                return;
+            }
+
+            const subject = subjects.find(function(s) { return s.id === subjectId; });
+            if (subject) {
+                if (isPresent) {
+                    subject.attended++;
+                } else {
+                    subject.missed++;
+                }
+                saveSubjects();
+            }
+        }
+
+        function quickMarkAttendance(subjectId, isPresent) {
+            const subject = subjects.find(function(s) { return s.id === subjectId; });
+            if (subject) {
+                if (isPresent) {
+                    subject.attended++;
+                } else {
+                    subject.missed++;
+                }
+                saveSubjects();
+            }
+        }
+
+        function deleteSubject(id) {
+            if (confirm('Are you sure you want to delete this subject?')) {
+                subjects = subjects.filter(function(s) { return s.id !== id; });
+                saveSubjects();
+            }
+        }
+
+        function resetSubject(id) {
+            if (confirm('Are you sure you want to reset attendance for this subject?')) {
+                const subject = subjects.find(function(s) { return s.id === id; });
+                if (subject) {
+                    subject.attended = 0;
+                    subject.missed = 0;
+                    saveSubjects();
+                }
+            }
+        }
+
+        function calculateAttendance(subject) {
+            const total = subject.attended + subject.missed;
+            if (total === 0) return 0;
+            return (subject.attended / total) * 100;
+        }
+
+        function calculateRequiredAttendance(subject) {
+            const targetPercentage = 80;
+            const total = subject.attended + subject.missed;
+            const currentPercentage = calculateAttendance(subject);
+
+            if (currentPercentage >= targetPercentage) {
+                return 0;
+            }
+
+            const required = Math.ceil((0.80 * total - subject.attended) / 0.20);
+            return required > 0 ? required : 0;
+        }
+
+        function getPercentageClass(percentage) {
+            if (percentage >= 80) return 'percentage';
+            if (percentage >= 70) return 'percentage warning';
+            return 'percentage low';
+        }
+
+        function renderSubjects() {
+            const container = document.getElementById('subjectsList');
+            
+            if (subjects.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📋</div><p>No subjects added yet. Add your first subject to start tracking attendance!</p></div>';
+                return;
+            }
+
+            let html = '';
+            
+            for (let i = 0; i < subjects.length; i++) {
+                const subject = subjects[i];
+                const total = subject.attended + subject.missed;
+                const percentage = calculateAttendance(subject);
+                const required = calculateRequiredAttendance(subject);
+                const percentageClass = getPercentageClass(percentage);
+
+                let alertMessage = '';
+                if (total === 0) {
+                    alertMessage = '<div class="alert alert-warning">⚠️ No attendance recorded yet</div>';
+                } else if (percentage < 80) {
+                    alertMessage = '<div class="alert alert-danger">⚠️ Below 80%! Attend next ' + required + ' lecture' + (required > 1 ? 's' : '') + ' to reach 80%</div>';
+                } else {
+                    const canMiss = Math.floor((subject.attended - 0.80 * total) / 0.80);
+                    alertMessage = '<div class="alert alert-success">✓ You\'re above 80%! You can miss ' + canMiss + ' lecture' + (canMiss !== 1 ? 's' : '') + ' and still be above 80%</div>';
+                }
+
+                html += '<div class="subject-item">';
+                html += '<div class="subject-header"><div class="subject-name">' + subject.name + '</div></div>';
+                html += '<div class="attendance-stats">';
+                html += '<div class="stat-box"><div class="stat-label">Attended</div><div class="stat-value" style="color: var(--success);">' + subject.attended + '</div></div>';
+                html += '<div class="stat-box"><div class="stat-label">Missed</div><div class="stat-value" style="color: var(--danger);">' + subject.missed + '</div></div>';
+                html += '<div class="stat-box"><div class="stat-label">Total</div><div class="stat-value" style="color: var(--secondary);">' + total + '</div></div>';
+                html += '</div>';
+                html += '<div class="progress-bar"><div class="progress-fill ' + (percentage < 80 ? 'low' : '') + '" style="width: ' + Math.min(percentage, 100) + '%"></div></div>';
+                html += '<div style="text-align: center; margin-bottom: 1rem;"><span class="' + percentageClass + '" style="font-size: 2.5rem;">' + (total > 0 ? percentage.toFixed(1) : '0.0') + '%</span></div>';
+                html += alertMessage;
+                html += '<div class="action-buttons">';
+                html += '<button class="btn btn-success btn-small" data-id="' + subject.id + '" data-action="present">+ Mark Present</button>';
+                html += '<button class="btn btn-danger btn-small" data-id="' + subject.id + '" data-action="absent">- Mark Absent</button>';
+                html += '<button class="btn btn-primary btn-small" data-id="' + subject.id + '" data-action="reset">Reset</button>';
+                html += '<button class="btn btn-danger btn-small" data-id="' + subject.id + '" data-action="delete">Delete</button>';
+                html += '</div></div>';
+            }
+            
+            container.innerHTML = html;
+            
+            // Add event listeners to buttons
+            const buttons = container.querySelectorAll('button');
+            for (let i = 0; i < buttons.length; i++) {
+                buttons[i].addEventListener('click', function() {
+                    const id = parseInt(this.getAttribute('data-id'));
+                    const action = this.getAttribute('data-action');
+                    
+                    if (action === 'present') {
+                        quickMarkAttendance(id, true);
+                    } else if (action === 'absent') {
+                        quickMarkAttendance(id, false);
+                    } else if (action === 'reset') {
+                        resetSubject(id);
+                    } else if (action === 'delete') {
+                        deleteSubject(id);
+                    }
+                });
+            }
+        }
+
+        function updateSubjectDropdown() {
+            const select = document.getElementById('selectSubject');
+            let options = '<option value="">-- Choose a subject --</option>';
+            
+            for (let i = 0; i < subjects.length; i++) {
+                options += '<option value="' + subjects[i].id + '">' + subjects[i].name + '</option>';
+            }
+            
+            select.innerHTML = options;
+        }
+
+        // Event listeners
+        document.getElementById('loginBtn').addEventListener('click', handleLogin);
+        document.getElementById('logoutBtn').addEventListener('click', handleLogout);
+        document.getElementById('addSubjectBtn').addEventListener('click', addSubject);
+        document.getElementById('markPresentBtn').addEventListener('click', function() {
+            markAttendance(true);
+        });
+        document.getElementById('markAbsentBtn').addEventListener('click', function() {
+            markAttendance(false);
+        });
+
+        // Allow Enter key on login
+        document.getElementById('loginRollNo').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                handleLogin();
+            }
+        });
+    </script>
+</body>
+</html>

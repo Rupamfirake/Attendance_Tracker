@@ -1,0 +1,3 @@
+📚 Student Attendance Tracker A simple, beautiful, and powerful attendance tracking web application for PGDM students. Track your attendance, stay above 80%, and never miss exam eligibility!
+
+🌟 Features ✅ Individual Student Login - Each student has their own separate account ✅ Real-time Attendance Calculation - Instantly see your attendance percentage ✅ Smart Predictions - Know exactly how many lectures to attend to reach 80% ✅ Multiple Subjects - Track attendance for all your subjects ✅ Beautiful UI - Clean, modern, and mobile-friendly design ✅ Offline Support - Works without internet connection ✅ Data Privacy - All data stored locally in your browser ✅ Color-coded Alerts - Visual warnings when below 80%
